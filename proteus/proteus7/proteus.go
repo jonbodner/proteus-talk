@@ -1,10 +1,10 @@
 package main
 
 import (
-	"reflect"
+	"bytes"
 	"errors"
 	"fmt"
-	"bytes"
+	"reflect"
 	"strings"
 	"text/template"
 )
@@ -31,6 +31,8 @@ func Build(dao interface{}, paramAdapter ParamAdapter) error {
 		funcType := curField.Type
 
 		paramOrder := curField.Tag.Get("prop")
+
+		fmt.Printf("Processing field %s with query %s and paramOrder %s\n", curField.Name, query, paramOrder)
 		nameOrderMap := buildNameOrderMap(paramOrder)
 
 		implementation, err := makeImplementation(funcType, query, paramAdapter, nameOrderMap)
@@ -40,6 +42,7 @@ func Build(dao interface{}, paramAdapter ParamAdapter) error {
 
 		fieldValue := daoValue.Field(i)
 		fieldValue.Set(reflect.MakeFunc(funcType, implementation))
+		fmt.Println()
 	}
 	return nil
 }
@@ -136,7 +139,7 @@ func buildFixedQueryAndParamOrder(query string, nameOrderMap map[string]int, fun
 		}
 		return simpleQueryHolder(queryString), paramOrder, nil
 	}
-	return templateQueryHolder{queryString:queryString, pa: pa, paramOrder: paramOrder}, paramOrder, nil
+	return templateQueryHolder{queryString: queryString, pa: pa, paramOrder: paramOrder}, paramOrder, nil
 }
 
 var errType = reflect.TypeOf((*error)(nil)).Elem()
@@ -336,7 +339,6 @@ func populateReturnVal(returnVal reflect.Value, cols []string, vals []interface{
 	}
 	return nil
 }
-
 
 // template slice support
 type queryHolder interface {

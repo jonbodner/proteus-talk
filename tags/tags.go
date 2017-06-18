@@ -1,8 +1,8 @@
 package tags
 
 import (
-	"reflect"
 	"fmt"
+	"reflect"
 )
 
 func TagPrinter(s interface{}) {

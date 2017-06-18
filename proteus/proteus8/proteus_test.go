@@ -1,10 +1,10 @@
 package main
 
 import (
-	"testing"
 	"database/sql"
 	"fmt"
 	"strings"
+	"testing"
 )
 
 func BenchmarkProteus(b *testing.B) {
@@ -172,17 +172,17 @@ func (spd standardPersonDao) GetByAge(db *sql.DB, id int, ages []int, name strin
 	startQuery := "SELECT age, name, id from PERSON WHERE name=$1 and age in (:ages:) and id = :id:"
 	params := make([]string, len(ages))
 	for i := 0; i < len(ages); i++ {
-		params[i] = fmt.Sprintf("$%d", i + 2)
+		params[i] = fmt.Sprintf("$%d", i+2)
 	}
 
 	inClause := strings.Join(params, ",")
 
 	finalQuery := strings.Replace(startQuery, ":ages:", inClause, -1)
-	finalQuery = strings.Replace(finalQuery, ":id:", fmt.Sprintf("$%d", len(ages) + 2), -1)
+	finalQuery = strings.Replace(finalQuery, ":id:", fmt.Sprintf("$%d", len(ages)+2), -1)
 
-	args := make([]interface{}, 0, len(ages) + 2)
+	args := make([]interface{}, 0, len(ages)+2)
 	args = append(args, name)
-	for _,v := range ages {
+	for _, v := range ages {
 		args = append(args, v)
 	}
 	args = append(args, id)
@@ -243,7 +243,7 @@ func doPersonStuffForStandardTest(b *testing.B, db *sql.DB) (int64, *Person, []P
 
 	people, err = sPersonDao.GetByAge(db, 1, []int{20, 32}, "Fred")
 	if err != nil {
-		b.Fatalf("get by age failed: %v",err)
+		b.Fatalf("get by age failed: %v", err)
 	}
 
 	count, err = sPersonDao.Update(db, 1, "Freddie", 30)

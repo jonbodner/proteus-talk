@@ -1,10 +1,10 @@
 package generate_test
 
 import (
+	"fmt"
+	"github.com/jonbodner/proteus-talk/generate"
 	"testing"
 	"time"
-	"github.com/jonbodner/proteus-talk/generate"
-	"fmt"
 )
 
 func AddSlowly(a, b int) int {

@@ -20,17 +20,17 @@ func (p Person) String() string {
 }
 
 type PersonDao struct {
-	Create func(e Executor, name string, age int) (int64, error)         `proq:"INSERT INTO PERSON(name, age) VALUES(:name:, :age:)" prop:"name,age"`
-	Get    func(q Querier, id int) (*Person, error)                      `proq:"SELECT * FROM PERSON WHERE id = :id:" prop:"id"`
-	Update func(e Executor, id int, name string, age int) (int64, error) `proq:"UPDATE PERSON SET name = :name:, age=:age: where id=:id:" prop:"id,name,age"`
-	Delete func(e Executor, id int) (int64, error)                       `proq:"DELETE FROM PERSON WHERE id = :id:" prop:"id"`
-	GetAll func(q Querier) ([]Person, error)                             `proq:"SELECT * FROM PERSON"`
+	Create   func(e Executor, name string, age int) (int64, error)         `proq:"INSERT INTO PERSON(name, age) VALUES(:name:, :age:)" prop:"name,age"`
+	Get      func(q Querier, id int) (*Person, error)                      `proq:"SELECT * FROM PERSON WHERE id = :id:" prop:"id"`
+	Update   func(e Executor, id int, name string, age int) (int64, error) `proq:"UPDATE PERSON SET name = :name:, age=:age: where id=:id:" prop:"id,name,age"`
+	Delete   func(e Executor, id int) (int64, error)                       `proq:"DELETE FROM PERSON WHERE id = :id:" prop:"id"`
+	GetAll   func(q Querier) ([]Person, error)                             `proq:"SELECT * FROM PERSON"`
+	GetByAge func(q Querier, ages []int) ([]Person, error)                 `proq:"SELECT * from PERSON WHERE age in (:ages:)" prop:"ages"`
 }
 
 var personDao PersonDao
 
 func init() {
-	fmt.Println("Setting up the DAO")
 	err := Build(&personDao, Postgres)
 	fmt.Println("DAO created")
 	if err != nil {
@@ -62,9 +62,24 @@ func DoPersonStuff(wrapper Wrapper) {
 		fmt.Println("create #3:  number of rows", count, "with error", err)
 	})
 
+	doStep("Get", func() {
+		person, err := personDao.Get(wrapper, 1)
+		fmt.Println("get: result", person, "with error", err)
+	})
+
 	doStep("Get all", func() {
 		people, err := personDao.GetAll(wrapper)
 		fmt.Println("get all: result", people, "with error", err)
+	})
+
+	doStep("Get by age (2 vals)", func() {
+		people, err := personDao.GetByAge(wrapper, []int{20, 32})
+		fmt.Println("get by age: result", people, "with error", err)
+	})
+
+	doStep("Get by age (3 vals)", func() {
+		people, err := personDao.GetByAge(wrapper, []int{20, 32, 50})
+		fmt.Println("get by age: result", people, "with error", err)
 	})
 
 	doStep("Update", func() {
@@ -72,9 +87,9 @@ func DoPersonStuff(wrapper Wrapper) {
 		fmt.Println("update: number of rows", count, "with error", err)
 	})
 
-	doStep("Get all #2", func() {
-		people, err := personDao.GetAll(wrapper)
-		fmt.Println("get all #2: result", people, "with error", err)
+	doStep("Get #2", func() {
+		person, err := personDao.Get(wrapper, 1)
+		fmt.Println("get #2: result", person, "with error", err)
 	})
 
 	doStep("Delete", func() {
@@ -82,9 +97,19 @@ func DoPersonStuff(wrapper Wrapper) {
 		fmt.Println("delete: number of rows", count, "with error", err)
 	})
 
-	doStep("Get all #3", func() {
-		people, err := personDao.GetAll(wrapper)
-		fmt.Println("get all #3: result", people, "with error", err)
+	doStep("Delete #2", func() {
+		count, err := personDao.Delete(wrapper, 1)
+		fmt.Println("delete #2: number of rows", count, "with error", err)
+	})
+
+	doStep("Get #3", func() {
+		person, err := personDao.Get(wrapper, 1)
+		fmt.Println("get #3: result", person, "with error", err)
+	})
+
+	doStep("Get by age (3 vals again)", func() {
+		people, err := personDao.GetByAge(wrapper, []int{20, 32, 50})
+		fmt.Println("get by age: result", people, "with error", err)
 	})
 }
 

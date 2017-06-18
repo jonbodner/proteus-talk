@@ -1,9 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"errors"
 	"fmt"
+	"reflect"
 )
 
 func Build(dao interface{}) error {
@@ -27,6 +27,7 @@ func Build(dao interface{}) error {
 		}
 		funcType := curField.Type
 
+		fmt.Printf("Processing field %s with query %s\n", curField.Name, query)
 		implementation, err := makeImplementation(funcType, query)
 		if err != nil {
 			continue
@@ -34,6 +35,7 @@ func Build(dao interface{}) error {
 
 		fieldValue := daoValue.Field(i)
 		fieldValue.Set(reflect.MakeFunc(funcType, implementation))
+		fmt.Println()
 	}
 	return nil
 }

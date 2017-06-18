@@ -1,9 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"errors"
 	"fmt"
+	"reflect"
 )
 
 func Build(dao interface{}) error {
@@ -27,6 +27,7 @@ func Build(dao interface{}) error {
 		}
 		funcType := curField.Type
 
+		fmt.Printf("Processing field %s with query %s\n", curField.Name, query)
 		implementation, err := makeImplementation(funcType, query)
 		if err != nil {
 			continue
@@ -34,6 +35,7 @@ func Build(dao interface{}) error {
 
 		fieldValue := daoValue.Field(i)
 		fieldValue.Set(reflect.MakeFunc(funcType, implementation))
+		fmt.Println()
 	}
 	return nil
 }
@@ -59,9 +61,9 @@ func makeExecutorImplementation(funcType reflect.Type, query string) (func([]ref
 	return func(args []reflect.Value) []reflect.Value {
 		executor := args[0].Interface().(Executor)
 
-		fmt.Println("I'm execing query",query)
-		result, err := executor.Exec(query/*args are coming soon*/)
-		fmt.Println("I got back results", result, "and error",err)
+		fmt.Println("I'm execing query", query)
+		result, err := executor.Exec(query /*args are coming soon*/)
+		fmt.Println("I got back results", result, "and error", err)
 
 		return nil
 	}, nil
@@ -72,9 +74,9 @@ func makeQuerierImplementation(funcType reflect.Type, query string) (func([]refl
 	return func(args []reflect.Value) []reflect.Value {
 		querier := args[0].Interface().(Querier)
 
-		fmt.Println("I'm querying query",query)
-		rows, err := querier.Query(query/*args are coming soon*/)
-		fmt.Println("I got back rows", rows, "and error",err)
+		fmt.Println("I'm querying query", query)
+		rows, err := querier.Query(query /*args are coming soon*/)
+		fmt.Println("I got back rows", rows, "and error", err)
 
 		return nil
 	}, nil

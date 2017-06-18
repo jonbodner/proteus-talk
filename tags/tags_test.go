@@ -1,8 +1,8 @@
 package tags_test
 
 import (
-	"testing"
 	"github.com/jonbodner/proteus-talk/tags"
+	"testing"
 )
 
 type S struct {

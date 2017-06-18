@@ -17,4 +17,3 @@ func Postgres(pos int) string {
 func Oracle(pos int) string {
 	return fmt.Sprintf(":%d", pos)
 }
-

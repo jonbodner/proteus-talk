@@ -2,15 +2,15 @@ package main
 
 import (
 	"database/sql"
-	"log"
-	_ "github.com/lib/pq"
 	"fmt"
+	_ "github.com/lib/pq"
+	"log"
 )
 
 type Person struct {
-	Id   int `prof:"id"`
+	Id   int    `prof:"id"`
 	Name string `prof:"name"`
-	Age  int `prof:"age"`
+	Age  int    `prof:"age"`
 }
 
 func (p Person) String() string {
@@ -18,11 +18,11 @@ func (p Person) String() string {
 }
 
 type PersonDao struct {
-	Create   func(e Executor, name string, age int) (int64, error) `proq:"INSERT INTO PERSON(name, age) VALUES(:name:, :age:)" prop:"name,age"`
-	Get      func(q Querier, id int) (*Person, error) `proq:"SELECT * FROM PERSON WHERE id = :id:" prop:"id"`
-	Update   func(e Executor, id int, name string, age int) (int64, error) `proq:"UPDATE PERSON SET name = :name:, age=:age: where id=:id:" prop:"id,name,age"`
-	Delete   func(e Executor, id int) (int64, error) `proq:"DELETE FROM PERSON WHERE id = :id:" prop:"id"`
-	GetAll   func(q Querier) ([]Person, error) `proq:"SELECT * FROM PERSON"`
+	Create   func(e Executor, name string, age int) (int64, error)              `proq:"INSERT INTO PERSON(name, age) VALUES(:name:, :age:)" prop:"name,age"`
+	Get      func(q Querier, id int) (*Person, error)                           `proq:"SELECT * FROM PERSON WHERE id = :id:" prop:"id"`
+	Update   func(e Executor, id int, name string, age int) (int64, error)      `proq:"UPDATE PERSON SET name = :name:, age=:age: where id=:id:" prop:"id,name,age"`
+	Delete   func(e Executor, id int) (int64, error)                            `proq:"DELETE FROM PERSON WHERE id = :id:" prop:"id"`
+	GetAll   func(q Querier) ([]Person, error)                                  `proq:"SELECT * FROM PERSON"`
 	GetByAge func(q Querier, id int, ages []int, name string) ([]Person, error) `proq:"SELECT * from PERSON WHERE name=:name: and age in (:ages:) and id = :id:" prop:"id,ages,name"`
 }
 

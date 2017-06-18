@@ -24,4 +24,3 @@ type Sql interface {
 
 	Query(query string, args ...interface{}) (*sql.Rows, error)
 }
-

@@ -31,6 +31,7 @@ func Build(dao interface{}, paramAdapter ParamAdapter) error {
 		funcType := curField.Type
 
 		paramOrder := curField.Tag.Get("prop")
+
 		nameOrderMap := buildNameOrderMap(paramOrder)
 
 		implementation, err := makeImplementation(funcType, query, paramAdapter, nameOrderMap)
@@ -74,7 +75,7 @@ func makeImplementation(funcType reflect.Type, query string, paramAdapter ParamA
 		}
 		return makeQuerierImplementation(funcType, fixedQuery, paramOrder)
 	default:
-		return nil, errors.New("first parameter must be of type Executor or Querier")
+		return nil, errors.New("first parameter must be of type api.Executor or api.Querier")
 	}
 }
 
@@ -154,7 +155,7 @@ func makeExecutorImplementation(funcType reflect.Type, query queryHolder, paramO
 
 		queryArgs := buildQueryArgs(args, paramOrder)
 
-		//fmt.Println("I'm execing query", finalQuery, "with args", queryArgs)
+		fmt.Println("I'm execing query", finalQuery, "with args", queryArgs)
 		result, err := executor.Exec(finalQuery, queryArgs...)
 		var count int64
 		if err == nil {
@@ -194,7 +195,7 @@ func makeQuerierImplementation(funcType reflect.Type, query queryHolder, paramOr
 		}
 
 		queryArgs := buildQueryArgs(args, paramOrder)
-		//fmt.Println("I'm querying query", finalQuery, "with args", queryArgs)
+		fmt.Println("I'm querying query", finalQuery, "with args", queryArgs)
 		rows, err := querier.Query(finalQuery, queryArgs...)
 
 		if err != nil {
@@ -364,6 +365,7 @@ func doFinalize(queryString string, paramOrder []paramInfo, pa ParamAdapter, arg
 		return "", err
 	}
 
+	var b bytes.Buffer
 	sliceMap := map[string]interface{}{}
 	for _, v := range paramOrder {
 		if v.isSlice {
@@ -372,8 +374,9 @@ func doFinalize(queryString string, paramOrder []paramInfo, pa ParamAdapter, arg
 			sliceMap[v.name] = 1
 		}
 	}
-	var b bytes.Buffer
-	err = temp.Execute(&b, sliceMap)
+	if err == nil {
+		err = temp.Execute(&b, sliceMap)
+	}
 	if err != nil {
 		return "", err
 	}
