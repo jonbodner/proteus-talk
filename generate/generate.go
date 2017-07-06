@@ -25,3 +25,20 @@ func MemoizeCalculator(c Calculator) Calculator {
 	})
 	return v.Interface().(Calculator)
 }
+
+
+func MemoizeCalculator2(c Calculator) Calculator {
+	type vals struct {
+		a, b int
+	}
+	cache := map[vals]int{}
+	return func(a,b int) int {
+		v := vals{a: a, b: b}
+		result, ok := cache[v]
+		if !ok {
+			result = c(a, b)
+			cache[v] = result
+		}
+		return result
+	}
+}

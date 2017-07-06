@@ -7,6 +7,8 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
+	"bufio"
+	"os"
 )
 
 type Person struct {
@@ -79,7 +81,7 @@ func DoPersonStuff(wrapper Wrapper) {
 
 func main() {
 	db := setupDbPostgres()
-	wrapper := Wrap(db)
+	wrapper := Adapt(db)
 	DoPersonStuff(wrapper)
 }
 

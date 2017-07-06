@@ -63,7 +63,7 @@ func DoPersonStuff(wrapper Wrapper) {
 
 func main() {
 	db := setupDbPostgres()
-	wrapper := Wrap(db)
+	wrapper := Adapt(db)
 	DoPersonStuff(wrapper)
 }
 

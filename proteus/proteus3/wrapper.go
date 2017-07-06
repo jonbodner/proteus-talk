@@ -2,7 +2,7 @@ package main
 
 import "database/sql"
 
-func Wrap(sqle Sql) Wrapper {
+func Adapt(sqle Sql) Wrapper {
 	return sqlWrapper{sqle}
 }
 

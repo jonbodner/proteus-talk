@@ -38,6 +38,20 @@ func BenchmarkMemoizationAddSlowly(b *testing.B) {
 	result = result
 }
 
+/*
+func BenchmarkMemoizationAddSlowly2(b *testing.B) {
+	memo := generate.MemoizeCalculator2(AddSlowly)
+	memo(1, 2)
+	var result int
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result = memo(1, 2)
+	}
+	b.StopTimer()
+	result = result
+}
+*/
+
 func BenchmarkAddNormally(b *testing.B) {
 	var result int
 	b.ResetTimer()
@@ -59,6 +73,20 @@ func BenchmarkMemoizationAddNormally(b *testing.B) {
 	b.StopTimer()
 	result = result
 }
+
+/*
+func BenchmarkMemoizationAddNormally2(b *testing.B) {
+	memo := generate.MemoizeCalculator2(AddNormally)
+	memo(1, 2)
+	var result int
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result = memo(1, 2)
+	}
+	b.StopTimer()
+	result = result
+}
+*/
 
 func timeThings(c generate.Calculator, a, b int) (int, time.Duration) {
 	start := time.Now()

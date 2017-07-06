@@ -11,7 +11,7 @@ func BenchmarkProteus(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		db := setupDbPostgres()
-		wrapper := Wrap(db)
+		wrapper := Adapt(db)
 		b.StartTimer()
 		doPersonStuffForProteusTest(b, wrapper)
 		b.StopTimer()
