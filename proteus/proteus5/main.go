@@ -7,8 +7,6 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
-	"bufio"
-	"os"
 )
 
 type Person struct {
