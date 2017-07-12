@@ -10,10 +10,10 @@ import (
 )
 
 type PersonDao struct {
-	Create func(Executor /*Parameters*/) `proq:"CREATE SQL QUERY GOES HERE"`
-	Get    func(Querier /*Parameters*/)  `proq:"READ SQL QUERY GOES HERE"`
-	Update func(Executor /*Parameters*/) `proq:"UPDATE SQL QUERY GOES HERE"`
-	Delete func(Executor /*Parameters*/) `proq:"DELETE SQL QUERY GOES HERE"`
+	Create func(Executor /*Parameters*/) `proq:"INSERT INTO PERSON(name, age) VALUES(:name:, :age:)"`
+	Get    func(Querier /*Parameters*/)  `proq:"SELECT * FROM PERSON WHERE id = :id:"`
+	Update func(Executor /*Parameters*/) `proq:"UPDATE PERSON SET name = :name:, age=:age: where id=:id:"`
+	Delete func(Executor /*Parameters*/) `proq:"DELETE FROM PERSON WHERE id = :id:"`
 }
 
 var personDao PersonDao
